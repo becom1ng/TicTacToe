@@ -8,7 +8,7 @@ namespace TicTacToe
     {
         static void Main(string[] args)
         {
-            initGame();
+            InitGame();
 
             //Grid playGrid = new Grid();
 
@@ -19,20 +19,48 @@ namespace TicTacToe
             // TODO: MAKE THE GAME LOOP WITH OUR OBJECTS **HOW TO SOLVE SCOPE WITHOUT INITGAME IN MAIN
             //while (gameComplete == false)
             //{
-            //    playGame(Player curPlayer, Grid playGrid);
+            //    PlayGame(Player curPlayer, Grid playGrid);
             //}
 
         }
 
         // Greeting and setup
-        public static void initGame()
+        public static void InitGame()
         {
-            //  TODO: Let the user choose how many players
-
             Console.WriteLine("########################");
             Console.WriteLine("Welcome to Tic Tac Toe!");
             Console.WriteLine();
-/*            string player1name = "";
+
+            //  TODO: Let the user choose how many players
+
+            int numPlayers = CheckInt("How many players?", 2);
+
+            for (int i = 1; i < numPlayers + 1; i++) {
+                string playerName = "";
+                while (playerName == "")
+                    {
+                        Console.WriteLine("Please enter the name of player {0}:");
+                        playerName = Console.ReadLine();
+                    }
+                Console.WriteLine();
+                char playerMarker = '';
+                while (playerMarker = '')
+                    {
+                        Console.WriteLine(playerName + ", choose your marker. (Example: X)");
+                        if (!char.TryParse(Console.ReadLine(), out playerMarker))
+                        {
+                            Console.WriteLine(playerName + ", choose your marker. (Example: X)");
+                        }
+                    }
+                Player player1 = new Player(playerName, playerMarker);
+                Console.WriteLine();
+                Console.WriteLine("###################################");
+                Console.WriteLine($"Player {i} created! {player1.Name} is {player1.Marker}.");
+                Console.WriteLine("###################################");
+                Console.WriteLine();
+            }
+
+            /*string player1name = "";
             while (player1name == "")
                 {
                     Console.WriteLine("Please enter the name of player 1:");
@@ -75,39 +103,14 @@ namespace TicTacToe
             Console.WriteLine("###################################");
             Console.WriteLine();*/
 
-            // TODO: Let the user choose how many columns and rows to place in the game grid.
+                // Let the user choose how many columns and rows to place in the game grid.
 
-            int gridRows = 0;
-            int gridCols = 0;
-            while (gridRows < 3)
-            {
-                Console.WriteLine("How many rows would you like in the game board (min 3)?");
-                if (!int.TryParse(Console.ReadLine(), out gridRows))
-                {
-                    Console.WriteLine("How many rows would you like in the game board (min 3)?");
-                }
-            }
-            Console.WriteLine();
-            while (gridCols < 3)
-            {
-                Console.WriteLine("How many columns would you like in the game board (min 3)?");
-                if (!int.TryParse(Console.ReadLine(), out gridCols))
-                {
-                    Console.WriteLine("How many columns would you like in the game board (min 3)?");
-                }
-            }
-            Console.WriteLine();
+                int gridRows = CheckInt("How many rows would you like in the game board?", 3);
+            int gridCols = CheckInt("How many columns would you like in the game board?", 3);
 
             Grid playGrid = new Grid(gridRows, gridCols);
 
             playGrid.DrawGrid();
-
-
-
-
-
-
-
 
 
 
@@ -120,7 +123,23 @@ namespace TicTacToe
             // playGame(player1, playGrid);
         }
 
-        public static void playGame(Player curPlayer, Grid gameBoard)
+        public static int CheckInt(string promptMsg, int minVal)
+        {
+            Console.WriteLine(promptMsg);
+            int x = 0;
+            while (x < minVal)
+            {
+                Console.WriteLine("Please enter a number (min {0}).", minVal);
+                if (!int.TryParse(Console.ReadLine(), out x))
+                {
+                    Console.WriteLine("Please enter a number (min {0}).", minVal);
+                }
+            }
+            Console.WriteLine();
+            return x;
+        }
+
+        public static void PlayGame(Player curPlayer, Grid gameBoard)
         {
             //gameBoard.DrawGrid();
             Console.WriteLine();

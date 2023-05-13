@@ -24,7 +24,6 @@ namespace nsGrid
             {
                 for (int c = 0; c < cols; c++)
                 {
-                    //Console.WriteLine("Adding Cell with: r = {0}, c = {1}", r, c);
                     Cells.Add(new Cell(r, c));
                 }
             }
