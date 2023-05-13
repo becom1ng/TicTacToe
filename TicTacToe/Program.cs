@@ -8,15 +8,16 @@ namespace TicTacToe
     {
         static void Main(string[] args)
         {
-            InitGame();
+            List<Player> playerList = new List<Player>();
+            Grid playGrid = new Grid();
 
-            //Grid playGrid = new Grid();
+            InitGame(playerList, playGrid);
 
             //bool gameComplete = false;
             //var curPlayer = player1;
 
 
-            // TODO: MAKE THE GAME LOOP WITH OUR OBJECTS **HOW TO SOLVE SCOPE WITHOUT INITGAME IN MAIN
+            //TODO: MAKE THE GAME LOOP WITH OUR OBJECTS **HOW TO SOLVE SCOPE WITHOUT INITGAME IN MAIN
             //while (gameComplete == false)
             //{
             //    PlayGame(Player curPlayer, Grid playGrid);
@@ -25,96 +26,58 @@ namespace TicTacToe
         }
 
         // Greeting and setup
-        public static void InitGame()
+        public static void InitGame(List<Player> players, Grid grid )
         {
             Console.WriteLine("########################");
             Console.WriteLine("Welcome to Tic Tac Toe!");
             Console.WriteLine();
 
-            //  TODO: Let the user choose how many players
-
+            // Let the user choose how many players and create them.
             int numPlayers = CheckInt("How many players?", 2);
 
-            for (int i = 1; i < numPlayers + 1; i++) {
+            for (int i = 0; i < numPlayers; i++) {
                 string playerName = "";
                 while (playerName == "")
                     {
-                        Console.WriteLine("Please enter the name of player {0}:");
+                        Console.WriteLine("Please enter the name of player {0}:", i + 1);
                         playerName = Console.ReadLine();
                     }
                 Console.WriteLine();
-                char playerMarker = '';
-                while (playerMarker = '')
+
+                Console.WriteLine(playerName + ", choose your marker.");
+                char playerMarker = CheckChar();
+                bool dupMarker = true;
+                while (dupMarker)
                     {
-                        Console.WriteLine(playerName + ", choose your marker. (Example: X)");
-                        if (!char.TryParse(Console.ReadLine(), out playerMarker))
+                        Player markerCheck = players.Find(objPlayer => objPlayer.Marker == playerMarker);
+                        if (markerCheck != null)
                         {
-                            Console.WriteLine(playerName + ", choose your marker. (Example: X)");
+                            Console.WriteLine("This marker has already been chosen. Please choose a different marker.");
+                            playerMarker = CheckChar();
+                        }
+                        else
+                        {
+                            dupMarker = false;
                         }
                     }
-                Player player1 = new Player(playerName, playerMarker);
+
+            players.Add(new Player(playerName, playerMarker));
                 Console.WriteLine();
                 Console.WriteLine("###################################");
-                Console.WriteLine($"Player {i} created! {player1.Name} is {player1.Marker}.");
+                Console.WriteLine($"Player created! {playerName} is {playerMarker}.");
                 Console.WriteLine("###################################");
                 Console.WriteLine();
             }
 
-            /*string player1name = "";
-            while (player1name == "")
-                {
-                    Console.WriteLine("Please enter the name of player 1:");
-                    player1name = Console.ReadLine();
-                }
-            Console.WriteLine();
-            char player1marker = 'a';
-            while (!(player1marker == 'X' || player1marker == 'O'))
-                {
-                    Console.WriteLine(player1name + ", choose your marker (X or O):");
-                    if (!char.TryParse(Console.ReadLine(), out player1marker))
-                    {
-                        Console.WriteLine(player1name + ", choose your marker (X or O):");
-                    }
-                }
-            Player player1 = new Player(player1name, player1marker);
-            Console.WriteLine();
-            Console.WriteLine("###################################");
-            Console.WriteLine($"Player 1 created! {player1.Name} is {player1.Marker}.");
-            Console.WriteLine("###################################");
-            Console.WriteLine();
 
-            string player2name = "";
-            while (player2name == "")
-                {
-                    Console.WriteLine("Please enter the name of player 2:");
-                    player2name = Console.ReadLine();
-                }
-            char player2marker = 'a';
-                if (player1.Marker == 'X')
-                {
-                    player2marker = 'O';
-                } else {
-                    player2marker = 'X';
-                }
-            Player player2 = new Player(player2name, player2marker);
-            Console.WriteLine();
-            Console.WriteLine("###################################");
-            Console.WriteLine($"Player 2 created! {player2.Name} is {player2.Marker}.");
-            Console.WriteLine("###################################");
-            Console.WriteLine();*/
-
-                // Let the user choose how many columns and rows to place in the game grid.
-
-                int gridRows = CheckInt("How many rows would you like in the game board?", 3);
+            // Let the user choose how many columns and rows to place in the game grid.
+            int gridRows = CheckInt("How many rows would you like in the game board?", 3);
             int gridCols = CheckInt("How many columns would you like in the game board?", 3);
 
-            Grid playGrid = new Grid(gridRows, gridCols);
-
-            playGrid.DrawGrid();
-
-
-
-
+            //Grid playGrid = new Grid(gridRows, gridCols);
+            grid.CreateGrid(gridRows, gridCols);
+            grid.DrawGrid();
+            Console.WriteLine();
 
             Console.WriteLine("Press [ENTER] to begin the game...");
             Console.Read();
@@ -136,6 +99,17 @@ namespace TicTacToe
                 }
             }
             Console.WriteLine();
+            return x;
+        }
+
+        public static char CheckChar()
+        {
+            char x = 'x';
+            Console.WriteLine("Please enter a single character. (Example: X)");
+            if (!char.TryParse(Console.ReadLine(), out x))
+            {
+                Console.WriteLine("Please enter a single character. (Example: X)");
+            }
             return x;
         }
 

@@ -10,15 +10,17 @@ namespace nsGrid
 
         public List<Cell> Cells { get; private set; }
 
-        public Grid(int rows, int cols)
+        /*public Grid(int rows, int cols)
         {
             CreateGrid(rows, cols);
             NumRows = rows;
             NumCols = cols;
-        }
+        }*/
 
-        private void CreateGrid(int rows, int cols)
+        public void CreateGrid(int rows, int cols)
         {
+            NumRows = rows;
+            NumCols = cols;
             Cells = new List<Cell>();
             for (int r = 0; r < rows; r++)
             {
@@ -40,10 +42,10 @@ namespace nsGrid
             {
                 for (int c = 0; c < NumCols; c++)
                 {
-                    Cell oFound = Cells.Find(oCell => oCell.Row == r && oCell.Column == c);
-                    if (oFound != null)
+                    Cell objFound = Cells.Find(objCell => objCell.Row == r && objCell.Column == c);
+                    if (objFound != null)
                     {
-                        Console.Write(" {0} ", oFound.Marker);
+                        Console.Write(" {0} ", objFound.Marker);
                     }
 
                     if (c < NumCols - 1)
