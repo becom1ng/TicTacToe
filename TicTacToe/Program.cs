@@ -13,27 +13,24 @@ namespace TicTacToe
 
             InitGame(playerList, playGrid);
 
-            //bool gameComplete = false;
-            //var curPlayer = player1;
+            bool gameComplete = false;
 
-
-            //TODO: MAKE THE GAME LOOP WITH OUR OBJECTS **HOW TO SOLVE SCOPE WITHOUT INITGAME IN MAIN
-            //while (gameComplete == false)
-            //{
-            //    PlayGame(Player curPlayer, Grid playGrid);
-            //}
-
+            //TODO: MAKE THE GAME LOOP WITH OBJECTS
+            while (!gameComplete)
+            {
+                PlayGame(playerList, playGrid);
+            }
         }
 
         // Greeting and setup
-        public static void InitGame(List<Player> players, Grid grid )
+        public static void InitGame(List<Player> players, Grid grid)
         {
             Console.WriteLine("########################");
             Console.WriteLine("Welcome to Tic Tac Toe!");
             Console.WriteLine();
 
             // Let the user choose how many players and create them.
-            int numPlayers = CheckInt("How many players?", 2);
+            int numPlayers = CheckInt("How many players?", 2, 10);
 
             for (int i = 0; i < numPlayers; i++) {
                 string playerName = "";
@@ -52,6 +49,7 @@ namespace TicTacToe
                         Player markerCheck = players.Find(objPlayer => objPlayer.Marker == playerMarker);
                         if (markerCheck != null)
                         {
+                            Console.WriteLine();
                             Console.WriteLine("This marker has already been chosen. Please choose a different marker.");
                             playerMarker = CheckChar();
                         }
@@ -71,8 +69,8 @@ namespace TicTacToe
 
 
             // Let the user choose how many columns and rows to place in the game grid.
-            int gridRows = CheckInt("How many rows would you like in the game board?", 3);
-            int gridCols = CheckInt("How many columns would you like in the game board?", 3);
+            int gridRows = CheckInt("How many rows would you like in the game board?", 3, 20);
+            int gridCols = CheckInt("How many columns would you like in the game board?", 3, 20);
 
             //Grid playGrid = new Grid(gridRows, gridCols);
             grid.CreateGrid(gridRows, gridCols);
@@ -86,18 +84,28 @@ namespace TicTacToe
             // playGame(player1, playGrid);
         }
 
-        public static int CheckInt(string promptMsg, int minVal)
+        public static int CheckInt(string promptMsg, int minVal, int maxVal)
         {
             Console.WriteLine(promptMsg);
             int x = 0;
-            while (x < minVal)
+            while (x < minVal || x > maxVal)
             {
-                Console.WriteLine("Please enter a number (min {0}).", minVal);
+                Console.WriteLine("Please enter a number between {0} and {1}.", minVal, maxVal);
                 if (!int.TryParse(Console.ReadLine(), out x))
                 {
-                    Console.WriteLine("Please enter a number (min {0}).", minVal);
+                    Console.WriteLine("Please enter a number between {0} and {1}.", minVal, maxVal);
                 }
             }
+
+            /*do
+            {
+                Console.WriteLine("Please enter a number between {0} and {1}.", minVal, maxVal);
+                if (!int.TryParse(Console.ReadLine(), out x))
+                {
+                    Console.WriteLine("Please enter a number between {0} and {1}.", minVal, maxVal);
+                }
+            } while (x < minVal || x > maxVal);*/
+
             Console.WriteLine();
             return x;
         }
@@ -113,12 +121,28 @@ namespace TicTacToe
             return x;
         }
 
-        public static void PlayGame(Player curPlayer, Grid gameBoard)
+        public static void PlayGame(List<Player> players, Grid grid)
         {
-            //gameBoard.DrawGrid();
-            Console.WriteLine();
-            Console.WriteLine($"{curPlayer.Name}, it is your turn!");
-            Console.WriteLine("Please select an unoccupied square on the game to make a move.");
+            foreach (Player p in players)
+            {
+                grid.DrawGrid();
+                Console.WriteLine();
+                Console.WriteLine("########################");
+                Console.WriteLine($"{p.Name}, it is your turn!");
+                Console.WriteLine("To place your marker in a space you will first select the row, then the column.");
+                Console.WriteLine();
+
+                bool invalidMove = true;
+                while (invalidMove)
+                {
+                    int moveRow = CheckInt("Select your row.", 1, grid.NumRows);   //*** THIS TRIGGERS 3 MESSAGES FOR INT.TRYPARSE
+                    int moveCol = CheckInt("Select your column.", 1, grid.NumCols);
+                    invalidMove = grid.MakeMove(p, moveRow, moveCol);
+                }
+            }
+
+
+
         }
     }
 }

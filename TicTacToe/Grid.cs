@@ -29,11 +29,6 @@ namespace nsGrid
                     Cells.Add(new Cell(r, c));
                 }
             }
-
-            /*foreach (Cell cell in Cells)
-            {
-                Console.WriteLine("Cell: row = {0}, col = {1}, marker = {2}", cell.Row, cell.Column, cell.Marker);
-            }*/
         }
 
         public void DrawGrid()
@@ -72,12 +67,20 @@ namespace nsGrid
             }
         }
 
-        public string MakeMove(Player player, int space)
+        public bool MakeMove(Player player, int r, int c)
         {
-            // TODO: validate the move, set the marker, or return a string with validation error message
-            return ""; // empty string means no error (part of our game design, not a feature of C#)
+            Cell objFound = Cells.Find(objCell => objCell.Row == r - 1  && objCell.Column == c - 1 && objCell.Marker == ' ');
+            if (objFound != null) // Cell is blank
+            {
+                objFound.Marker = player.Marker;
+                Console.WriteLine("Your marker has been set in space {0}, {1}!", r, c);
+                Console.WriteLine();
+                return false;
+            } else {
+                Console.WriteLine("The space at {0}, {1} is occupied! Please try again.", r, c);
+                Console.WriteLine();
+                return true;
+            }
         }
-
-        // TODO: add the other method ideas for things to do on a game grid
     }
 }
