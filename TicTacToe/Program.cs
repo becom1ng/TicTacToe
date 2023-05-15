@@ -1,7 +1,6 @@
 ﻿using nsPlayer;
 using nsCell;
 using nsGrid;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace TicTacToe
 {
@@ -16,11 +15,18 @@ namespace TicTacToe
 
             bool gameComplete = false;
 
-            //TODO: MAKE THE GAME LOOP WITH OBJECTS
+            // Main game loop
             while (!gameComplete)
             {
                 gameComplete = PlayGame(playerList, playGrid);
             }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Thank you for playing!");
+            Console.WriteLine();
+            Console.WriteLine("Press [ENTER] to close the game...");
+            Console.ReadLine();
         }
 
         // Greeting and setup
@@ -81,8 +87,6 @@ namespace TicTacToe
             Console.WriteLine("Press [ENTER] to begin the game...");
             Console.ReadLine();
             Console.Clear();
-
-            // playGame(player1, playGrid);
         }
 
         public static int CheckInt(string promptMsg, int minVal, int maxVal)
@@ -114,6 +118,7 @@ namespace TicTacToe
 
         public static bool PlayGame(List<Player> players, Grid grid)
         {
+            int totalSpaces = grid.NumRows * grid.NumCols;
             foreach (Player p in players)
             {
                 Console.Clear();
@@ -124,25 +129,32 @@ namespace TicTacToe
                 Console.WriteLine("To place your marker in a space you will first select the row, then the column.");
                 Console.WriteLine();
 
-                bool invalidMove = true;
-                while (invalidMove)
+                bool validMove = false;
+                while (!validMove)
                 {
                     int moveRow = CheckInt("Select your row.", 1, grid.NumRows);
                     int moveCol = CheckInt("Select your column.", 1, grid.NumCols);
-                    invalidMove = grid.MakeMove(p, moveRow, moveCol);
+                    validMove = grid.MakeMove(p, moveRow, moveCol);
                 }
+                grid.MovesMade++;
 
-                // TODO: Logic for detecting a winner goes here.
+                // Check for winner
                 if (grid.CheckWin(p))
                 {
-                    // IF WINNER FOUND
-                    break;
+                    return true;
+                } else if (grid.MovesMade == totalSpaces) {
+                    Console.WriteLine("########################");
+                    Console.WriteLine("The game resulted in a tie!");
+                    Console.WriteLine("########################");
+                    return true;
                 }
 
                 Console.WriteLine("Your turn is complete!");
                 Console.WriteLine("Press [ENTER] to go to the next player...");
                 Console.ReadLine();
             }
+
+            return false;
         }
     }
 }

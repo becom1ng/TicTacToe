@@ -1,6 +1,5 @@
 using nsPlayer;
 using nsCell;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace nsGrid
 {
@@ -8,24 +7,19 @@ namespace nsGrid
     {
         public int NumRows { get; set; }
         public int NumCols { get; set; }
+        public int MovesMade { get; set; }
 
         public List<Cell> Cells { get; private set; }
-
-        /*public Grid(int rows, int cols)
-        {
-            CreateGrid(rows, cols);
-            NumRows = rows;
-            NumCols = cols;
-        }*/
 
         public void CreateGrid(int rows, int cols)
         {
             NumRows = rows;
             NumCols = cols;
+            MovesMade = 0;
             Cells = new List<Cell>();
-            for (int r = 0; r < rows; r++)
+            for (int r = 1; r < rows + 1; r++)
             {
-                for (int c = 0; c < cols; c++)
+                for (int c = 1; c < cols + 1; c++)
                 {
                     Cells.Add(new Cell(r, c));
                 }
@@ -34,9 +28,9 @@ namespace nsGrid
 
         public void DrawGrid()
         {
-            for (int r = 0; r < NumRows; r++)
+            for (int r = 1; r < NumRows + 1; r++)
             {
-                for (int c = 0; c < NumCols; c++)
+                for (int c = 1; c < NumCols + 1; c++)
                 {
                     Cell objFound = Cells.Find(objCell => objCell.Row == r && objCell.Column == c);
                     if (objFound != null)
@@ -44,7 +38,7 @@ namespace nsGrid
                         Console.Write(" {0} ", objFound.Marker);
                     }
 
-                    if (c < NumCols - 1)
+                    if (c < NumCols)
                     {
                         Console.Write("|");
                     }
@@ -52,12 +46,12 @@ namespace nsGrid
 
                 Console.WriteLine();
 
-                if (r < NumRows - 1)
+                if (r < NumRows)
                 {
-                    for (int c = 0; c < NumCols; c++)
+                    for (int c = 1; c < NumCols + 1; c++)
                     {
                         Console.Write("---");
-                        if (c < NumCols - 1)
+                        if (c < NumCols)
                         {
                             Console.Write("+");
                         }
@@ -70,42 +64,89 @@ namespace nsGrid
 
         public bool MakeMove(Player player, int r, int c)
         {
-            Cell objFound = Cells.Find(objCell => objCell.Row == r - 1  && objCell.Column == c - 1 && objCell.Marker == ' ');
+            Cell objFound = Cells.Find(objCell => objCell.Row == r && objCell.Column == c && objCell.Marker == ' ');
             if (objFound != null) // Cell is blank
             {
                 objFound.Marker = player.Marker;
                 Console.WriteLine("Your marker has been set in space {0}, {1}!", r, c);
                 Console.WriteLine();
-                return false;
+                DrawGrid();
+                Console.WriteLine();
+                return true;
             } else {
                 Console.WriteLine("The space at {0}, {1} is occupied! Please try again.", r, c);
                 Console.WriteLine();
-                return true;
+                return false;
             }
         }
 
         public bool CheckWin(Player player)
         {
-            // SWITCH statement?
-
-
             // 1. Check for all markers in a single row
             for (int i = 1; i < NumRows + 1; i++)
             {
-                List<Cell> results = Cells.FindAll(objCell => objCell.Row == i && objCell.Marker == player.Marker);
+                List<Cell> results = Cells.FindAll(objCell => +objCell.Row == i && objCell.Marker == player.Marker);
                 if (results.Count == NumCols)
                 {
                     // WIN
+                    Console.WriteLine("########################");
+                    Console.WriteLine("YOU WON THE GAME! CONGRATS TO YOU, {0}!", player.Name);
+                    Console.WriteLine("########################");
                     return true;
                 }
-                results.Clear();
             }
 
             // 2. Check for all markers in a single column
+            for (int i = 1; i < NumCols + 1; i++)
+            {
+                List<Cell> results = Cells.FindAll(objCell => objCell.Column == i && objCell.Marker == player.Marker);
+                if (results.Count == NumRows)
+                {
+                    // WIN
+                    Console.WriteLine("########################");
+                    Console.WriteLine("YOU WON THE GAME! CONGRATS TO YOU, {0}!", player.Name);
+                    Console.WriteLine("########################");
+                    return true;
+                }
+            }
 
-            // 3. Diagonals
+            // 3. Diagonal top left to bottom right
+            List<Cell> diagResults = new List<Cell>();
+            for (int i = 1; i < NumCols + 1; i++)
+            {
+                Cell objFound = Cells.Find(objCell => objCell.Row == i && objCell.Column == i && objCell.Marker == player.Marker);
+                if (objFound != null)
+                {
+                    diagResults.Add(objFound);
+                    if (diagResults.Count == NumCols)
+                    {
+                        // WIN
+                        Console.WriteLine("########################");
+                        Console.WriteLine("YOU WON THE GAME! CONGRATS TO YOU, {0}!", player.Name);
+                        Console.WriteLine("########################");
+                        return true;
+                    }
+                }
+            }
+            diagResults.Clear();
 
-
+            // 4. Diagonal top right to bottom left
+            for (int i = 1; i < NumCols + 1; i++)
+            {
+                Cell objFound = Cells.Find(objCell => objCell.Row == i && objCell.Column == NumCols + 1 - i && objCell.Marker == player.Marker);
+                if (objFound != null)
+                {
+                    diagResults.Add(objFound);
+                    if (diagResults.Count == NumCols)
+                    {
+                        // WIN
+                        Console.WriteLine("########################");
+                        Console.WriteLine("YOU WON THE GAME! CONGRATS TO YOU, {0}!", player.Name);
+                        Console.WriteLine("########################");
+                        return true;
+                    }
+                }
+            }
 
             return false;
         }
