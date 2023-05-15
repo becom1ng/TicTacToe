@@ -1,6 +1,7 @@
 ﻿using nsPlayer;
 using nsCell;
 using nsGrid;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TicTacToe
 {
@@ -18,7 +19,7 @@ namespace TicTacToe
             //TODO: MAKE THE GAME LOOP WITH OBJECTS
             while (!gameComplete)
             {
-                PlayGame(playerList, playGrid);
+                gameComplete = PlayGame(playerList, playGrid);
             }
         }
 
@@ -78,7 +79,7 @@ namespace TicTacToe
             Console.WriteLine();
 
             Console.WriteLine("Press [ENTER] to begin the game...");
-            Console.Read();
+            Console.ReadLine();
             Console.Clear();
 
             // playGame(player1, playGrid);
@@ -96,16 +97,6 @@ namespace TicTacToe
                     Console.WriteLine("Please enter a number between {0} and {1}.", minVal, maxVal);
                 }
             }
-
-            /*do
-            {
-                Console.WriteLine("Please enter a number between {0} and {1}.", minVal, maxVal);
-                if (!int.TryParse(Console.ReadLine(), out x))
-                {
-                    Console.WriteLine("Please enter a number between {0} and {1}.", minVal, maxVal);
-                }
-            } while (x < minVal || x > maxVal);*/
-
             Console.WriteLine();
             return x;
         }
@@ -121,10 +112,11 @@ namespace TicTacToe
             return x;
         }
 
-        public static void PlayGame(List<Player> players, Grid grid)
+        public static bool PlayGame(List<Player> players, Grid grid)
         {
             foreach (Player p in players)
             {
+                Console.Clear();
                 grid.DrawGrid();
                 Console.WriteLine();
                 Console.WriteLine("########################");
@@ -135,14 +127,22 @@ namespace TicTacToe
                 bool invalidMove = true;
                 while (invalidMove)
                 {
-                    int moveRow = CheckInt("Select your row.", 1, grid.NumRows);   //*** THIS TRIGGERS 3 MESSAGES FOR INT.TRYPARSE
+                    int moveRow = CheckInt("Select your row.", 1, grid.NumRows);
                     int moveCol = CheckInt("Select your column.", 1, grid.NumCols);
                     invalidMove = grid.MakeMove(p, moveRow, moveCol);
                 }
+
+                // TODO: Logic for detecting a winner goes here.
+                if (grid.CheckWin(p))
+                {
+                    // IF WINNER FOUND
+                    break;
+                }
+
+                Console.WriteLine("Your turn is complete!");
+                Console.WriteLine("Press [ENTER] to go to the next player...");
+                Console.ReadLine();
             }
-
-
-
         }
     }
 }

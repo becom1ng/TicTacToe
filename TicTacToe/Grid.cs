@@ -1,5 +1,6 @@
 using nsPlayer;
 using nsCell;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace nsGrid
 {
@@ -81,6 +82,32 @@ namespace nsGrid
                 Console.WriteLine();
                 return true;
             }
+        }
+
+        public bool CheckWin(Player player)
+        {
+            // SWITCH statement?
+
+
+            // 1. Check for all markers in a single row
+            for (int i = 1; i < NumRows + 1; i++)
+            {
+                List<Cell> results = Cells.FindAll(objCell => objCell.Row == i && objCell.Marker == player.Marker);
+                if (results.Count == NumCols)
+                {
+                    // WIN
+                    return true;
+                }
+                results.Clear();
+            }
+
+            // 2. Check for all markers in a single column
+
+            // 3. Diagonals
+
+
+
+            return false;
         }
     }
 }
