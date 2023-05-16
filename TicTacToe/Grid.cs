@@ -68,10 +68,11 @@ namespace nsGrid
             if (objFound != null) // Cell is blank
             {
                 objFound.Marker = player.Marker;
+                Console.WriteLine("###################################");
                 Console.WriteLine("Your marker has been set in space {0}, {1}!", r, c);
                 Console.WriteLine();
-                DrawGrid();
-                Console.WriteLine();
+                //DrawGrid();
+                //Console.WriteLine();
                 return true;
             } else {
                 Console.WriteLine("The space at {0}, {1} is occupied! Please try again.", r, c);
@@ -88,11 +89,7 @@ namespace nsGrid
                 List<Cell> results = Cells.FindAll(objCell => +objCell.Row == i && objCell.Marker == player.Marker);
                 if (results.Count == NumCols)
                 {
-                    // WIN
-                    Console.WriteLine("########################");
-                    Console.WriteLine("YOU WON THE GAME! CONGRATS TO YOU, {0}!", player.Name);
-                    Console.WriteLine("########################");
-                    return true;
+                    return AnnounceWinner(player);
                 }
             }
 
@@ -102,11 +99,7 @@ namespace nsGrid
                 List<Cell> results = Cells.FindAll(objCell => objCell.Column == i && objCell.Marker == player.Marker);
                 if (results.Count == NumRows)
                 {
-                    // WIN
-                    Console.WriteLine("########################");
-                    Console.WriteLine("YOU WON THE GAME! CONGRATS TO YOU, {0}!", player.Name);
-                    Console.WriteLine("########################");
-                    return true;
+                    return AnnounceWinner(player);
                 }
             }
 
@@ -120,11 +113,7 @@ namespace nsGrid
                     diagResults.Add(objFound);
                     if (diagResults.Count == NumCols)
                     {
-                        // WIN
-                        Console.WriteLine("########################");
-                        Console.WriteLine("YOU WON THE GAME! CONGRATS TO YOU, {0}!", player.Name);
-                        Console.WriteLine("########################");
-                        return true;
+                        return AnnounceWinner(player);
                     }
                 }
             }
@@ -139,16 +128,19 @@ namespace nsGrid
                     diagResults.Add(objFound);
                     if (diagResults.Count == NumCols)
                     {
-                        // WIN
-                        Console.WriteLine("########################");
-                        Console.WriteLine("YOU WON THE GAME! CONGRATS TO YOU, {0}!", player.Name);
-                        Console.WriteLine("########################");
-                        return true;
+                        return AnnounceWinner(player);
                     }
                 }
             }
-
             return false;
+        }
+
+        private bool AnnounceWinner(Player player)
+        {
+            Console.WriteLine("###################################");
+            Console.WriteLine("YOU WON THE GAME! Congratulations, {0}!", player.Name);
+            Console.WriteLine("###################################");
+            return true;
         }
     }
 }

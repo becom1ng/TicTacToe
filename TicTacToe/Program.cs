@@ -37,21 +37,33 @@ namespace TicTacToe
             Console.WriteLine();
 
             // Let the user choose how many players and create them.
-            int numPlayers = CheckInt("How many players?", 2, 10);
+            int numPlayers = CheckInt("How many players?", 2, 5);
 
-            for (int i = 0; i < numPlayers; i++) {
+            for (int i = 0; i < numPlayers; i++)
+            {
                 string playerName = "";
-                while (playerName == "")
+                bool dupCheck = true;
+                while (playerName == "" || dupCheck)
                     {
                         Console.WriteLine("Please enter the name of player {0}:", i + 1);
                         playerName = Console.ReadLine();
+                        Player nameCheck = players.Find(objPlayer => objPlayer.Name == playerName);
+                        if (nameCheck != null)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("This name has already been chosen. Please choose a different name.");
+                            //playerName = Console.ReadLine();
+                        }
+                        else
+                        {
+                            dupCheck = false;
+                        }
                     }
                 Console.WriteLine();
-
                 Console.WriteLine(playerName + ", choose your marker.");
                 char playerMarker = CheckChar();
-                bool dupMarker = true;
-                while (dupMarker)
+                dupCheck = true;
+                while (dupCheck)
                     {
                         Player markerCheck = players.Find(objPlayer => objPlayer.Marker == playerMarker);
                         if (markerCheck != null)
@@ -62,11 +74,10 @@ namespace TicTacToe
                         }
                         else
                         {
-                            dupMarker = false;
+                            dupCheck = false;
                         }
                     }
-
-            players.Add(new Player(playerName, playerMarker));
+                players.Add(new Player(playerName, playerMarker));
                 Console.WriteLine();
                 Console.WriteLine("###################################");
                 Console.WriteLine($"Player created! {playerName} is {playerMarker}.");
@@ -74,16 +85,16 @@ namespace TicTacToe
                 Console.WriteLine();
             }
 
-
             // Let the user choose how many columns and rows to place in the game grid.
             int gridRows = CheckInt("How many rows would you like in the game board?", 3, 20);
             int gridCols = CheckInt("How many columns would you like in the game board?", 3, 20);
 
-            //Grid playGrid = new Grid(gridRows, gridCols);
             grid.CreateGrid(gridRows, gridCols);
-            grid.DrawGrid();
             Console.WriteLine();
-
+            Console.WriteLine("###################################");
+            Console.WriteLine("Created {0} players and a board that is {1} by {2}!", numPlayers, gridRows, gridCols);
+            Console.WriteLine("###################################");
+            Console.WriteLine();
             Console.WriteLine("Press [ENTER] to begin the game...");
             Console.ReadLine();
             Console.Clear();
@@ -108,10 +119,14 @@ namespace TicTacToe
         public static char CheckChar()
         {
             char x = 'x';
-            Console.WriteLine("Please enter a single character. (Example: X)");
-            if (!char.TryParse(Console.ReadLine(), out x))
+            string input = "";
+            bool isValid = false;
+
+            while (!isValid || string.IsNullOrWhiteSpace(input))
             {
                 Console.WriteLine("Please enter a single character. (Example: X)");
+                input = Console.ReadLine().Trim();
+                isValid = char.TryParse(input, out x);
             }
             return x;
         }
@@ -124,7 +139,7 @@ namespace TicTacToe
                 Console.Clear();
                 grid.DrawGrid();
                 Console.WriteLine();
-                Console.WriteLine("########################");
+                Console.WriteLine("###################################");
                 Console.WriteLine($"{p.Name}, it is your turn!");
                 Console.WriteLine("To place your marker in a space you will first select the row, then the column.");
                 Console.WriteLine();
@@ -143,9 +158,10 @@ namespace TicTacToe
                 {
                     return true;
                 } else if (grid.MovesMade == totalSpaces) {
-                    Console.WriteLine("########################");
+                    Console.WriteLine();
+                    Console.WriteLine("###################################");
                     Console.WriteLine("The game resulted in a tie!");
-                    Console.WriteLine("########################");
+                    Console.WriteLine("###################################");
                     return true;
                 }
 
