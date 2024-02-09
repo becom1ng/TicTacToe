@@ -1,5 +1,4 @@
 ﻿using nsPlayer;
-using nsCell;
 using nsGrid;
 
 namespace TicTacToe
@@ -29,7 +28,11 @@ namespace TicTacToe
             Console.ReadLine();
         }
 
-        // Greeting and setup
+        /// <summary>
+        /// Greeting and game setup.
+        /// </summary>
+        /// <param name="players"></param>
+        /// <param name="grid"></param>
         public static void InitGame(List<Player> players, Grid grid)
         {
             Console.WriteLine("########################");
@@ -100,6 +103,13 @@ namespace TicTacToe
             Console.Clear();
         }
 
+        /// <summary>
+        /// Check for a valid integer for moving.
+        /// </summary>
+        /// <param name="promptMsg"></param>
+        /// <param name="minVal"></param>
+        /// <param name="maxVal"></param>
+        /// <returns></returns>
         public static int CheckInt(string promptMsg, int minVal, int maxVal)
         {
             Console.WriteLine(promptMsg);
@@ -116,6 +126,10 @@ namespace TicTacToe
             return x;
         }
 
+        /// <summary>
+        /// Verify that player marker is valid.
+        /// </summary>
+        /// <returns></returns>
         public static char CheckChar()
         {
             char x = 'x';
@@ -131,6 +145,12 @@ namespace TicTacToe
             return x;
         }
 
+        /// <summary>
+        /// Primary game loop.
+        /// </summary>
+        /// <param name="players"></param>
+        /// <param name="grid"></param>
+        /// <returns></returns>
         public static bool PlayGame(List<Player> players, Grid grid)
         {
             int totalSpaces = grid.NumRows * grid.NumCols;
