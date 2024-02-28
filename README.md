@@ -1,2 +1,2 @@
 # TicTacToe
-A simple console game for learning purposes.
+A simple console game built in C# for learning purposes.
