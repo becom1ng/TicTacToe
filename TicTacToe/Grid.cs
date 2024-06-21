@@ -33,7 +33,7 @@ namespace nsGrid
                 for (int c = 1; c < NumCols + 1; c++)
                 {
                     Cell objFound = Cells.Find(objCell => objCell.Row == r && objCell.Column == c);
-                    if (objFound != null)
+                    if (objFound)
                     {
                         Console.Write(" {0} ", objFound.Marker);
                     }
@@ -65,7 +65,7 @@ namespace nsGrid
         public bool MakeMove(Player player, int r, int c)
         {
             Cell objFound = Cells.Find(objCell => objCell.Row == r && objCell.Column == c && objCell.Marker == ' ');
-            if (objFound != null) // Cell is blank
+            if (objFound) // Cell is blank
             {
                 objFound.Marker = player.Marker;
                 Console.WriteLine("###################################");
